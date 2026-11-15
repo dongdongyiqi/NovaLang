@@ -10,12 +10,19 @@ private:
 
     inline const Token& peek() const { return tokens[pos]; }
     inline const Token& advance() { return tokens[pos++]; }
+    bool match(TokenType type);
 
+    // 表达式解析（按优先级从低到高）
+    std::unique_ptr<Expr> parseComparison();
+    std::unique_ptr<Expr> parseAddition();
+    std::unique_ptr<Expr> parseMultiplication();
     std::unique_ptr<Expr> parsePrimary();
-    std::unique_ptr<Expr> parseTerm();
-    std::unique_ptr<Expr> parseExpr();
+
+    // 语句解析
+    std::unique_ptr<Stmt> parseStatement();
+    std::unique_ptr<Stmt> parseBlock();
 
 public:
     explicit Parser(std::vector<Token> t);
-    void run(Env& env);
+    std::vector<std::unique_ptr<Stmt>> parseProgram();
 };
